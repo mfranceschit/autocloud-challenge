@@ -20,9 +20,9 @@ export interface Brewery {
 }
 
 export type ResponseData = {
-  [key: string]: string | number
-}
+  [key: string]: string | number;
+};
 
 export type GroupedData = {
-  [state: string]: ResponseData[]
-}
+  [state: string]: ResponseData[];
+};

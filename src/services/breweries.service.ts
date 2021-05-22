@@ -5,17 +5,15 @@ import config from 'config';
 import fetch from 'node-fetch';
 
 class BreweriesService {
-
-
   public retrieveBreweries = async (): Promise<GroupedData> => {
     const url = config.get('dataSource') as string;
     const response = await fetch(url, { method: 'GET' });
     const rawData = await response.json();
 
-    const cleanedFromNullsData = this.removeNullAttributes(rawData)
-    const camelizedData = this.camelizeAttributes(cleanedFromNullsData)
-    const groupedData = this.groupByState(camelizedData)
-    const data = this.calculateRegionForBreweries(groupedData)
+    const cleanedFromNullsData = this.removeNullAttributes(rawData);
+    const camelizedData = this.camelizeAttributes(cleanedFromNullsData);
+    const groupedData = this.groupByState(camelizedData);
+    const data = this.calculateRegionForBreweries(groupedData);
 
     return data;
   };
@@ -59,7 +57,7 @@ class BreweriesService {
     let breweriesWithRegion = {};
     for (const key in data) {
       const breweries = data[key]
-        .filter(brewery => brewery.latitude !== null && brewery.longitude !== null)
+        .filter(brewery => !!brewery.latitude && !!brewery.longitude)
         .map(filteredBrewery => ({
           ...filteredBrewery,
           region: locateRegion({

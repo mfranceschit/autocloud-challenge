@@ -7,27 +7,26 @@ import USStates from '../data/states.json';
  */
 export const locateRegion = (coordinate: { lat: number; lon: number }): string => {
   let region = '';
-  let storedDiff
+  let storedDiff;
   for (const state of USStates) {
-    let currentCoordinate = state.coordinate;
+    const currentCoordinate = state.coordinate;
 
     const currentDiff = {
       lat: Math.abs(currentCoordinate.lat - coordinate.lat),
       lon: Math.abs(currentCoordinate.lon - coordinate.lon),
     };
 
-    if(!storedDiff) {
-      region = state.region
-      storedDiff = currentDiff
+    if (!storedDiff) {
+      region = state.region;
+      storedDiff = currentDiff;
     } else if (currentDiff.lat <= storedDiff.lat && currentDiff.lon <= storedDiff.lon) {
-      region = state.region
+      region = state.region;
       storedDiff = {
         lat: currentDiff.lat,
-        lon: currentDiff.lon
-      }
+        lon: currentDiff.lon,
+      };
     }
-
   }
 
-  return region
+  return region;
 };
