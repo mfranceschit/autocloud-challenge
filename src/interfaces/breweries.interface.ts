@@ -18,3 +18,11 @@ export interface Brewery {
   updatedAt: string;
   createdAt: string;
 }
+
+export type ResponseData = {
+  [key: string]: string | number
+}
+
+export type GroupedData = {
+  [state: string]: ResponseData[]
+}

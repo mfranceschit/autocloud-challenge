@@ -29,4 +29,16 @@ describe('BreweriesService', () => {
       })
     })
   });
+
+  it('Should return an object of breweries grouped by state and sorted by creation', () => {
+
+    const camelizedData = breweriesService.camelizeAttributes(mockedBreweries)
+    const data = breweriesService.groupByState(camelizedData)
+
+
+    expect(Object.keys(data).length).toBe(4)
+    expect(data['Iowa'].length).toBe(2)
+    expect(data['Iowa'][0]?.id).toBe(10187)
+
+  });
 });
