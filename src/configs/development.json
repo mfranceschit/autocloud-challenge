@@ -1,4 +1,5 @@
 {
     "env": "development",
-    "secretKey": "secretKey"
+    "secretKey": "secretKey",
+    "dataSource": "https://api.openbrewerydb.org/breweries"
 }

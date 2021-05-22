@@ -37,16 +37,4 @@ describe('Testing Auth', () => {
         .expect('Set-Cookie', /^Authorization=.+/);
     });
   });
-
-  // error: StatusCode : 404, Message : Authentication token missing
-  // describe('[POST] /logout', () => {
-  //   it('logout Set-Cookie Authorization=; Max-age=0', () => {
-  //     const authRoute = new AuthRoute();
-  //     const app = new App([authRoute]);
-
-  //     return request(app.getServer())
-  //       .post('/logout')
-  //       .expect('Set-Cookie', /^Authorization=\;/);
-  //   });
-  // });
 });
