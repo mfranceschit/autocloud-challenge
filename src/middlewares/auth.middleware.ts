@@ -1,32 +1,29 @@
-import config from 'config';
-import { NextFunction, Response } from 'express';
-import jwt from 'jsonwebtoken';
-import HttpException from '@exceptions/HttpException';
-import { DataStoredInToken, RequestWithUser } from '@interfaces/auth.interface';
+import passport from 'passport';
+import passportJWT, { VerifiedCallback } from 'passport-jwt';
+import JWTStrategy = passportJWT.Strategy;
+import ExtractJWT = passportJWT.ExtractJwt;
 import userModel from '@models/users.model';
+import { DataStoredInToken } from '@/interfaces/auth.interface';
+import config from 'config';
 
-const authMiddleware = async (req: RequestWithUser, res: Response, next: NextFunction) => {
-  try {
-    const Authorization = req.cookies['Authorization'] || req.header('Authorization').split('Bearer ')[1] || null;
+const authMiddleware = () => {
+  passport.use(
+    new JWTStrategy(
+      {
+        jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+        secretOrKey: config.get('secretKey'),
+      },
+      (token: DataStoredInToken, done: VerifiedCallback) => {
+        const findUser = userModel.find(user => user.id === token.id);
 
-    if (Authorization) {
-      const secretKey: string = config.get('secretKey');
-      const verificationResponse = (await jwt.verify(Authorization, secretKey)) as DataStoredInToken;
-      const userId = verificationResponse.id;
-      const findUser = userModel.find(user => user.id === userId);
+        if (findUser) {
+          return done(null, findUser);
+        }
 
-      if (findUser) {
-        req.user = findUser;
-        next();
-      } else {
-        next(new HttpException(401, 'Wrong authentication token'));
-      }
-    } else {
-      next(new HttpException(404, 'Authentication token missing'));
-    }
-  } catch (error) {
-    next(new HttpException(401, 'Wrong authentication token'));
-  }
+        return done(null, false);
+      },
+    ),
+  );
 };
 
 export default authMiddleware;

@@ -11,8 +11,8 @@ import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import Routes from '@interfaces/routes.interface';
 import errorMiddleware from '@middlewares/error.middleware';
+import authMiddleware from '@middlewares/auth.middleware';
 import { logger, stream } from '@utils/logger';
-
 class App {
   public app: express.Application;
   public port: string | number;
@@ -57,6 +57,7 @@ class App {
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(cookieParser());
+    authMiddleware()
   }
 
   private initializeRoutes(routes: Routes[]) {
