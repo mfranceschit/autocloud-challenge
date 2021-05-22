@@ -12,7 +12,13 @@ class AuthController {
       const userData: CreateUserDto = req.body;
       const signUpUserData: User = await this.authService.signup(userData);
 
-      res.status(201).json({ data: signUpUserData, message: 'signup' });
+      res.status(201).json({
+        data: {
+          id: signUpUserData.id,
+          email: signUpUserData.email,
+        },
+        message: 'signup',
+      });
     } catch (error) {
       next(error);
     }
@@ -23,11 +29,14 @@ class AuthController {
       const userData: CreateUserDto = req.body;
       const { tokenData, findUser } = await this.authService.login(userData);
 
-      res.status(200).json({ data: {
-        id: findUser.id,
-        email: findUser.email,
-        auth: tokenData
-      }, message: 'login' });
+      res.status(200).json({
+        data: {
+          id: findUser.id,
+          email: findUser.email,
+          auth: tokenData,
+        },
+        message: 'login',
+      });
     } catch (error) {
       next(error);
     }
@@ -38,8 +47,13 @@ class AuthController {
       const userData: User = req.user;
       const logOutUserData: User = await this.authService.logout(userData);
 
-      res.setHeader('Set-Cookie', ['Authorization=; Max-age=0']);
-      res.status(200).json({ data: logOutUserData, message: 'logout' });
+      res.status(200).json({
+        data: {
+          id: logOutUserData.id,
+          email: logOutUserData.email,
+        },
+        message: 'logout',
+      });
     } catch (error) {
       next(error);
     }

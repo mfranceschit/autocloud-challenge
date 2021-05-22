@@ -8,7 +8,6 @@ import { User } from '@interfaces/users.interface';
 import userModel from '@models/users.model';
 import { isEmpty } from '@utils/util';
 
-
 class AuthService {
   public users = userModel;
 
@@ -35,7 +34,7 @@ class AuthService {
 
     const tokenData = this.createToken(findUser.id);
 
-    return { tokenData , findUser };
+    return { tokenData, findUser };
   }
 
   public async logout(userData: User): Promise<User> {
