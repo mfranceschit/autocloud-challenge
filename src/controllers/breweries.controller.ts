@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { Brewery } from '@interfaces/breweries.interface';
+import { GroupedData } from '@interfaces/breweries.interface';
 import BreweriesService from '@services/breweries.service';
 
 class BreweriesController {
@@ -7,7 +7,7 @@ class BreweriesController {
 
   public getBreweries = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const breweries: Brewery[] = await this.breweriesService.retrieveBreweries();
+      const breweries: GroupedData = await this.breweriesService.retrieveBreweries();
 
       res.status(200).json({ data: breweries, message: 'find breweries' });
     } catch (error) {

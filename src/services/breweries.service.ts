@@ -5,11 +5,19 @@ import config from 'config';
 import fetch from 'node-fetch';
 
 class BreweriesService {
-  public retrieveBreweries = async (): Promise<any> => {
+
+
+  public retrieveBreweries = async (): Promise<GroupedData> => {
     const url = config.get('dataSource') as string;
     const response = await fetch(url, { method: 'GET' });
-    const data = await response.json();
-    return response.json();
+    const rawData = await response.json();
+
+    const cleanedFromNullsData = this.removeNullAttributes(rawData)
+    const camelizedData = this.camelizeAttributes(cleanedFromNullsData)
+    const groupedData = this.groupByState(camelizedData)
+    const data = this.calculateRegionForBreweries(groupedData)
+
+    return data;
   };
 
   public removeNullAttributes = (data: ResponseData[]): ResponseData[] => {
