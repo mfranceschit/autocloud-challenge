@@ -1,5 +1,6 @@
 import { GroupedData, ResponseData } from '@/interfaces/breweries.interface';
 import { camelize } from '@/utils/camelize';
+import { locateRegion } from '@/utils/coordinates';
 import config from 'config';
 import fetch from 'node-fetch';
 
@@ -37,7 +38,6 @@ class BreweriesService {
 
       const sortedGroup = group.sort((a, b) => (new Date(b.createdAt) >= new Date(a.createdAt) ? 1 : -1)); // Order by createdAt
 
-      console.log(sortedGroup);
       return {
         ...current,
         [state]: sortedGroup,
@@ -45,6 +45,30 @@ class BreweriesService {
     }, {});
 
     return groupedData;
+  };
+
+  public calculateRegionForBreweries = (data: GroupedData): GroupedData => {
+    let breweriesWithRegion = {};
+    for (const key in data) {
+      const breweries = data[key]
+        .filter(brewery => brewery.latitude !== null && brewery.longitude !== null)
+        .map(filteredBrewery => ({
+          ...filteredBrewery,
+          region: locateRegion({
+            lat: parseInt(filteredBrewery.latitude as string),
+            lon: parseInt(filteredBrewery.longitude as string),
+          }),
+        }));
+
+      if (breweries.length > 0) {
+        breweriesWithRegion = {
+          ...breweriesWithRegion,
+          [key]: breweries,
+        };
+      }
+    }
+
+    return breweriesWithRegion;
   };
 }
 
