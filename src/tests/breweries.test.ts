@@ -29,9 +29,6 @@ describe('Util Coordinates', () => {
 
     // Alabama
     expect(locateRegion({ lat: 32.31813, lon: -86.902198 })).toBe('South');
-
-    // Pennsylvania
-    // expect(locateRegion({ lat: 39.9648491, lon: -75.13506341 })).not.toBe('Midwest');
   });
 });
 
@@ -103,11 +100,8 @@ describe('[GET] /breweries', () => {
     const app = new App([breweriesRoute]);
     const auth = authService.createToken(1); // Create JWT Token with id user 1
 
-    const response = await request(app.getServer())
-      .get(`${breweriesRoute.path}`)
-      .auth(auth.token, { type: 'bearer' })
-      .expect(200);
+    const response = await request(app.getServer()).get(`${breweriesRoute.path}`).auth(auth.token, { type: 'bearer' }).expect(200);
 
-      expect(response.body.data).toStrictEqual(mockedResponse)
+    expect(response.body.data).toStrictEqual(mockedResponse);
   });
 });
