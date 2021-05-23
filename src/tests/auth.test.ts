@@ -22,7 +22,7 @@ describe('Testing Auth', () => {
   });
 
   describe('[POST] /login', () => {
-    it('response should have the Set-Cookie header with the Authorization token', async () => {
+    it('Should return an error with non existing email', async () => {
       const userData: CreateUserDto = {
         email: 'test@email.com',
         password: 'q1w2e3r4',
@@ -34,7 +34,23 @@ describe('Testing Auth', () => {
       return request(app.getServer())
         .post('/login')
         .send(userData)
-        .expect('Set-Cookie', /^Authorization=.+/);
+        .expect(409, { message: "You're email test@email.com not found" });
+    });
+
+    it('Should login and return auth data', async () => {
+      const userData: CreateUserDto = {
+        email: 'lim@gmail.com',
+        password: 'q1w2e3r4',
+      };
+
+      const authRoute = new AuthRoute();
+      const app = new App([authRoute]);
+
+      const response =  await request(app.getServer())
+        .post('/login')
+        .send(userData)
+        .expect(200)
+      expect(response.body.data.auth).toBeDefined()
     });
   });
 });
